@@ -587,23 +587,24 @@ export default function ChatPage() {
 
       const reader = new FileReader();
       reader.onload = async () => {
+        const dataUrl = reader.result as string;
+
+        // 1) 先把自己的小票图片气泡加入聊天流（保证用户能看到上传的图）
         const imgMsg = {
           id: genId('msg'),
           role: 'user',
           type: 'image',
           content: '',
-          imageUrl: reader.result as string,
+          imageUrl: dataUrl,
           timestamp: Date.now(),
         };
         await addMessage(imgMsg);
-      };
-      reader.readAsDataURL(file);
 
-      setIsSending(true);
-
-      (async () => {
-        try {
-          const result = await ocrReceipt(reader.result as string);
+        // 2) 文件读取完成后，再用 dataURL 调用识别（修复竞态：此前 reader.result 未就绪导致空图识别）
+        setIsSending(true);
+        (async () => {
+          try {
+            const result = await ocrReceipt(dataUrl);
 
           const totalAmount = parseFloat(result.total_amount || '0');
 
@@ -679,6 +680,8 @@ export default function ChatPage() {
           setIsSending(false);
         }
       })();
+      };
+      reader.readAsDataURL(file);
     },
     [addMessage, isSending, streamRoastReply]
   );
