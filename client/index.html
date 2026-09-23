@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="/favicon.svg">
+  <title>Rolly AI 记账</title>
+  <script>
+    // 本地运行无平台注入，给空对象兜底，避免业务代码读取 window.__platform__ 时报错
+    window.__platform__ = window.__platform__ || {};
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/client/src/index.tsx"></script>
+</body>
+
+</html>
