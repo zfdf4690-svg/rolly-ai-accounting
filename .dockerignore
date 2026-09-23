@@ -1,0 +1,16 @@
+node_modules
+dist
+logs
+.git
+.agent-memory
+.githooks
+.env
+.env.*
+*.db
+*.db-wal
+*.db-shm
+*.log
+code.zip
+rolly_avatar.png
+rolly_empty.png
+render.yaml

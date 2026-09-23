@@ -9,7 +9,8 @@ import { DRIZZLE_DATABASE } from '@lark-apaas/fullstack-nestjs-core';
 import { join } from 'path';
 import * as schema from './schema';
 
-const DB_PATH = join(process.cwd(), 'rolly.db');
+// 数据文件默认位于项目根目录 rolly.db；云端部署可通过 DB_PATH 指向持久化挂载卷
+const DB_PATH = process.env.DB_PATH || join(process.cwd(), 'rolly.db');
 
 const CREATE_TABLES_SQL = `
 CREATE TABLE IF NOT EXISTS "daily_summary" (
