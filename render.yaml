@@ -1,0 +1,42 @@
+# Rolly AI 记账 — Render Blueprint 全栈部署
+# 两个免费 Web Service：
+#   1) rolly-llm-gateway  — Python FastAPI LLM 网关（AI 解析/吐槽/小票识别）
+#   2) rolly-api          — NestJS 全栈（前端页面 + /api 业务 + SQLite）
+# 部署后需在 Dashboard 填写 sync:false 的环境变量（LLM Key 等敏感项）
+
+services:
+  - type: web
+    name: rolly-llm-gateway
+    runtime: python
+    plan: free
+    autoDeploy: true
+    buildCommand: pip install -r python-llm/requirements.txt
+    startCommand: cd python-llm && uvicorn server:app --host 0.0.0.0 --port 10000
+    envVars:
+      - key: LLM_BASE_URL
+        sync: false
+      - key: LLM_API_KEY
+        sync: false
+      - key: LLM_MODEL
+        sync: false
+      - key: HTTP_TIMEOUT
+        sync: false
+
+  - type: web
+    name: rolly-api
+    runtime: node
+    plan: free
+    autoDeploy: true
+    buildCommand: npm run build:prod
+    startCommand: node dist/server/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FORCE_FRAMEWORK_DISABLE_DATAPASS
+        value: "true"
+      - key: SERVER_HOST
+        value: 0.0.0.0
+      - key: SERVER_PORT
+        value: "10000"
+      - key: PYTHON_LLM_BASE_URL
+        sync: false
