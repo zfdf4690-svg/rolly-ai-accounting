@@ -9,6 +9,7 @@ cd /app/python-llm
 python3 -m uvicorn server:app --host 0.0.0.0 --port 8000 &
 LLM_PID=$!
 
-echo ">>> 启动 NestJS 全栈 (7860)"
+echo ">>> 启动 NestJS 全栈 ($PORT)"
 cd /app
+export SERVER_PORT="${PORT:-7860}"
 exec node dist/server/main.js
